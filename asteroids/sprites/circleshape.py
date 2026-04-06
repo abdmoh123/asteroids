@@ -4,6 +4,8 @@ import pygame
 from pygame.math import Vector2
 from pygame.surface import Surface
 
+type ColorValue = str | tuple[int, int, int]
+
 
 class CircleShape(pygame.sprite.Sprite):
     """Base class for game objects."""

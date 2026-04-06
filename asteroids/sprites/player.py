@@ -3,7 +3,6 @@
 from typing import override
 
 import pygame
-from asteroids.circleshape import CircleShape
 from asteroids.constants import (
     DOWN_KEYS,
     LEFT_KEYS,
@@ -14,12 +13,12 @@ from asteroids.constants import (
     TURN_SPEED,
     UP_KEYS,
 )
+from asteroids.sprites.circleshape import CircleShape, ColorValue
 from asteroids.utils import any_keys_in
 from pygame.math import Vector2
 from pygame.surface import Surface
 
 type Triangle = tuple[Vector2, Vector2, Vector2]
-type ColorValue = str | tuple[int, int, int]
 
 
 class Player(CircleShape):
