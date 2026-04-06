@@ -1,27 +1,42 @@
 """Main entrypoint for asteroids."""
 
+from dataclasses import dataclass
+
 import pygame
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_state
 from pygame.surface import Surface
 
 
-def pygame_init() -> Surface:
+@dataclass(frozen=True)
+class GameConfig:
+    """A set of data passed to the main game loop."""
+
+    screen: Surface
+    clock: pygame.time.Clock
+    fps: int = 60
+
+
+def pygame_init() -> GameConfig:
     """Initialises the pygame instance.
 
     Returns:
         Pygame screen surface
     """
     _ = pygame.init()
-    return pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    clock = pygame.time.Clock()
+    return GameConfig(screen=screen, clock=clock)
 
 
-def pygame_loop(screen: Surface) -> None:
+def pygame_loop(config: GameConfig) -> None:
     """Main pygame loop.
 
     Args:
-        screen: Pygame screen surface
+        config: The game configuration
     """
+    # Actual seconds per frame (first value isn't valid though)
+    dt: float = 0.0
     while True:
         log_state()
 
@@ -32,8 +47,12 @@ def pygame_loop(screen: Surface) -> None:
                 case _:
                     pass
 
-        _ = screen.fill((0, 0, 0))
+        _ = config.screen.fill((0, 0, 0))
         pygame.display.flip()
+
+        # Get the time since the last frame
+        delta_time_ms = config.clock.tick(config.fps)
+        dt = float(delta_time_ms) / 1000.0
 
 
 def main() -> None:
