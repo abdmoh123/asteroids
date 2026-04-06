@@ -1,4 +1,5 @@
 [tools]
+jq = "latest"
 uv = "latest"
 
 [settings.python]
