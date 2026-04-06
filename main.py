@@ -1,11 +1,13 @@
 """Main entrypoint for asteroids."""
 
 from dataclasses import dataclass
+from typing import Any
 
 import pygame
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_state
 from player import Player
+from pygame.sprite import Group
 from pygame.surface import Surface
 
 
@@ -39,7 +41,12 @@ def pygame_loop(config: GameConfig) -> None:
     # Actual seconds per frame (first value isn't valid though)
     dt: float = 0.0
 
-    player = Player(
+    updatable: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
+    drawable: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
+
+    Player.containers = (updatable, drawable)  # pyright: ignore[reportAttributeAccessIssue]
+
+    player = Player(  # pyright: ignore[reportUnusedVariable]
         x=config.screen.get_width() / 2, y=config.screen.get_height() / 2
     )
 
@@ -55,8 +62,11 @@ def pygame_loop(config: GameConfig) -> None:
 
         _ = config.screen.fill((0, 0, 0))
 
-        player.update(dt)
-        player.draw(config.screen)
+        for updatable_object in updatable:  # pyright: ignore[reportAny]
+            updatable_object.update(dt)  # pyright: ignore[reportAny]
+
+        for drawable_object in drawable:  # pyright: ignore[reportAny]
+            drawable_object.draw(config.screen)  # pyright: ignore[reportAny]
 
         pygame.display.flip()
 
