@@ -4,16 +4,30 @@ from typing import override
 
 import pygame
 from circleshape import CircleShape
-from constants import LINE_WIDTH, PLAYER_RADIUS
+from constants import (
+    LEFT_KEYS,
+    LINE_WIDTH,
+    PLAYER_RADIUS,
+    RIGHT_KEYS,
+    TURN_SPEED,
+)
 from pygame.math import Vector2
 from pygame.surface import Surface
+from utils import any_keys_in
 
 type Triangle = tuple[Vector2, Vector2, Vector2]
 type ColorValue = str | tuple[int, int, int]
 
 
 class Player(CircleShape):
-    """The Player class."""
+    """The Player class.
+
+    Attributes:
+        rotation: The rotation of the player
+        position: The x, y position of the player
+        velocity: The speed and direction the player is moving
+        radius: The radius/size of the player, defaults to PLAYER_RADIUS from constants.py
+    """
 
     def __init__(
         self, x: float, y: float, radius: float = PLAYER_RADIUS
@@ -31,6 +45,15 @@ class Player(CircleShape):
         c: Vector2 = self.position - forward * self.radius + right
         return (a, b, c)
 
+    def rotate(self, dt: float, turn_speed: float = TURN_SPEED) -> None:
+        """Sets the rotation of the player ship.
+
+        Args:
+            dt: The time since the last frame
+            turn_speed: The speed of rotation, defaults to TURN_SPEED from constants.py
+        """
+        self.rotation += turn_speed * dt
+
     @override
     def draw(
         self,
@@ -38,6 +61,13 @@ class Player(CircleShape):
         color: ColorValue = "white",
         width: int = LINE_WIDTH,
     ) -> None:
+        """Draws the player to the screen.
+
+        Args:
+            screen: The screen to draw to
+            color: The color of the player, defaults to "white"
+            width: The width of the lines, defaults to LINE_WIDTH from constants.py
+        """
         _ = pygame.draw.polygon(
             surface=screen,
             color=color,
@@ -47,4 +77,14 @@ class Player(CircleShape):
 
     @override
     def update(self, dt: float) -> None:
-        raise NotImplementedError()
+        """Updates the player's model.
+
+        Args:
+            dt: The time since the last frame
+        """
+        keys = pygame.key.get_pressed()  # A list of true/false values
+
+        if any_keys_in(LEFT_KEYS, keys):  # Anti-clockwise
+            self.rotate(-dt)
+        if any_keys_in(RIGHT_KEYS, keys):  # Clockwise
+            self.rotate(dt)

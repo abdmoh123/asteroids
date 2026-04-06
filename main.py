@@ -55,6 +55,7 @@ def pygame_loop(config: GameConfig) -> None:
 
         _ = config.screen.fill((0, 0, 0))
 
+        player.update(dt)
         player.draw(config.screen)
 
         pygame.display.flip()
