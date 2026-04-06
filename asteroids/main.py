@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from typing import Any
 
 import pygame
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from logger import log_state
-from player import Player
+from asteroids.constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from asteroids.logger import log_state
+from asteroids.player import Player
 from pygame.sprite import Group
 from pygame.surface import Surface
 

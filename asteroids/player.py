@@ -3,8 +3,8 @@
 from typing import override
 
 import pygame
-from circleshape import CircleShape
-from constants import (
+from asteroids.circleshape import CircleShape
+from asteroids.constants import (
     DOWN_KEYS,
     LEFT_KEYS,
     LINE_WIDTH,
@@ -14,9 +14,9 @@ from constants import (
     TURN_SPEED,
     UP_KEYS,
 )
+from asteroids.utils import any_keys_in
 from pygame.math import Vector2
 from pygame.surface import Surface
-from utils import any_keys_in
 
 type Triangle = tuple[Vector2, Vector2, Vector2]
 type ColorValue = str | tuple[int, int, int]
