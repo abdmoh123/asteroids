@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import pygame
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_state
+from player import Player
 from pygame.surface import Surface
 
 
@@ -37,6 +38,11 @@ def pygame_loop(config: GameConfig) -> None:
     """
     # Actual seconds per frame (first value isn't valid though)
     dt: float = 0.0
+
+    player = Player(
+        x=config.screen.get_width() / 2, y=config.screen.get_height() / 2
+    )
+
     while True:
         log_state()
 
@@ -48,6 +54,9 @@ def pygame_loop(config: GameConfig) -> None:
                     pass
 
         _ = config.screen.fill((0, 0, 0))
+
+        player.draw(config.screen)
+
         pygame.display.flip()
 
         # Get the time since the last frame
