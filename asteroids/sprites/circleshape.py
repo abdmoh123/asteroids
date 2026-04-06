@@ -1,5 +1,7 @@
 """Circle shape base class for asteroids - provided by boot.dev."""
 
+from typing import Self
+
 import pygame
 from pygame.math import Vector2
 from pygame.surface import Surface
@@ -29,3 +31,14 @@ class CircleShape(pygame.sprite.Sprite):
     def update(self, dt: float) -> None:
         """Updates the object."""
         raise NotImplementedError()
+
+    def collides_with(self, other: Self) -> bool:
+        """Checks if the object collides with another object.
+
+        Args:
+            other: Another CircleShape object to check collision against
+        Returns:
+            True if the objects collide, False otherwise
+        """
+        distance_between: float = self.position.distance_to(other.position)
+        return self.radius + other.radius > distance_between

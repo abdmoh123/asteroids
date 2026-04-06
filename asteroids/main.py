@@ -1,12 +1,13 @@
 """Main entrypoint for asteroids."""
 
+import sys
 from dataclasses import dataclass
 from typing import Any
 
 import pygame
 from asteroids.asteroid_field import AsteroidField
 from asteroids.constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from asteroids.logger import log_state
+from asteroids.logger import log_event, log_state
 from asteroids.sprites.asteroid import Asteroid
 from asteroids.sprites.player import Player
 from pygame.sprite import Group
@@ -71,6 +72,12 @@ def pygame_loop(config: GameConfig) -> None:
 
         for updatable_object in updatable:  # pyright: ignore[reportAny]
             updatable_object.update(dt)  # pyright: ignore[reportAny]
+
+        for asteroid in asteroids:  # pyright: ignore[reportAny]
+            if player.collides_with(asteroid):  # pyright: ignore[reportAny]
+                log_event("player_hit")
+                print("Game over!")
+                sys.exit(0)
 
         for drawable_object in drawable:  # pyright: ignore[reportAny]
             drawable_object.draw(config.screen)  # pyright: ignore[reportAny]
