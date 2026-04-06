@@ -10,6 +10,7 @@ SCREEN_HEIGHT: int = 720
 PLAYER_RADIUS: float = 20  # Radius of player's ship
 LINE_WIDTH: int = 2  # Width of lines that draw the player's ship
 TURN_SPEED: float = 300
+PLAYER_SPEED: float = 200
 
 # Keyboard keys
 LEFT_KEYS = set([pygame.K_a, pygame.K_LEFT, pygame.K_h])

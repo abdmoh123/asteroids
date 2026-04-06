@@ -5,11 +5,14 @@ from typing import override
 import pygame
 from circleshape import CircleShape
 from constants import (
+    DOWN_KEYS,
     LEFT_KEYS,
     LINE_WIDTH,
     PLAYER_RADIUS,
+    PLAYER_SPEED,
     RIGHT_KEYS,
     TURN_SPEED,
+    UP_KEYS,
 )
 from pygame.math import Vector2
 from pygame.surface import Surface
@@ -54,6 +57,17 @@ class Player(CircleShape):
         """
         self.rotation += turn_speed * dt
 
+    def move(self, dt: float, player_speed: float = PLAYER_SPEED) -> None:
+        """Moves the player forward or backward.
+
+        Args:
+            dt: The time since the last frame
+            player_speed: The speed of movement, defaults to PLAYER_SPEED from constants.py
+        """
+        direction = Vector2(0, 1).rotate(self.rotation)
+        self.velocity = direction * dt * player_speed  # pyright: ignore[reportUnannotatedClassAttribute]
+        self.position += self.velocity  # pyright: ignore[reportUnannotatedClassAttribute]
+
     @override
     def draw(
         self,
@@ -88,3 +102,7 @@ class Player(CircleShape):
             self.rotate(-dt)
         if any_keys_in(RIGHT_KEYS, keys):  # Clockwise
             self.rotate(dt)
+        if any_keys_in(UP_KEYS, keys):  # Forward
+            self.move(dt)
+        if any_keys_in(DOWN_KEYS, keys):  # Backward
+            self.move(-dt)
