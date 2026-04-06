@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from typing import Any
 
 import pygame
+from asteroids.asteroid_field import AsteroidField
 from asteroids.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from asteroids.logger import log_state
+from asteroids.sprites.asteroid import Asteroid
 from asteroids.sprites.player import Player
 from pygame.sprite import Group
 from pygame.surface import Surface
@@ -43,12 +45,17 @@ def pygame_loop(config: GameConfig) -> None:
 
     updatable: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
     drawable: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
+    asteroids: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
 
     Player.containers = (updatable, drawable)  # pyright: ignore[reportAttributeAccessIssue]
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable,)
 
     player = Player(  # pyright: ignore[reportUnusedVariable]
         x=config.screen.get_width() / 2, y=config.screen.get_height() / 2
     )
+
+    asteroid_field = AsteroidField()  # pyright: ignore[reportUnusedVariable]
 
     while True:
         log_state()
