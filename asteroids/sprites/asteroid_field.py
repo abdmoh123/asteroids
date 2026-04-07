@@ -6,10 +6,11 @@ from typing import Callable
 import pygame
 from asteroids.constants import *
 from asteroids.sprites.asteroid import Asteroid
+from asteroids.sprites.base import BaseSprite
 from pygame.math import Vector2
 
 
-class AsteroidField(pygame.sprite.Sprite):
+class AsteroidField(BaseSprite):
     edges: list[tuple[Vector2, Callable[[float], Vector2]]] = [
         (
             pygame.Vector2(1, 0),
@@ -34,7 +35,7 @@ class AsteroidField(pygame.sprite.Sprite):
     ]
 
     def __init__(self) -> None:
-        pygame.sprite.Sprite.__init__(self, self.containers)
+        super().__init__(*self.containers)
         self.spawn_timer: float = 0.0
 
     def spawn(

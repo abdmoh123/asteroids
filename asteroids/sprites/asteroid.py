@@ -5,10 +5,12 @@ from typing import override
 import pygame
 from asteroids.constants import LINE_WIDTH
 from asteroids.sprites.circleshape import CircleShape, ColorValue
+from asteroids.sprites.mixins.drawable import Drawable
+from asteroids.sprites.mixins.updatable import Updatable
 from pygame.surface import Surface
 
 
-class Asteroid(CircleShape):
+class Asteroid(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeMultipleInheritance]
     """The Asteroid sprite class."""
 
     def __init__(self, x: float, y: float, radius: float) -> None:

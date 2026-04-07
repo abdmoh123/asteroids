@@ -14,6 +14,8 @@ from asteroids.constants import (
     UP_KEYS,
 )
 from asteroids.sprites.circleshape import CircleShape, ColorValue
+from asteroids.sprites.mixins.drawable import Drawable
+from asteroids.sprites.mixins.updatable import Updatable
 from asteroids.utils import any_keys_in
 from pygame.math import Vector2
 from pygame.surface import Surface
@@ -21,7 +23,7 @@ from pygame.surface import Surface
 type Triangle = tuple[Vector2, Vector2, Vector2]
 
 
-class Player(CircleShape):
+class Player(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeMultipleInheritance]
     """The Player class.
 
     Attributes:

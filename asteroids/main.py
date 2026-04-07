@@ -2,13 +2,15 @@
 
 import sys
 from dataclasses import dataclass
-from typing import Any
 
 import pygame
-from asteroids.asteroid_field import AsteroidField
 from asteroids.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from asteroids.logger import log_event, log_state
 from asteroids.sprites.asteroid import Asteroid
+from asteroids.sprites.asteroid_field import AsteroidField
+from asteroids.sprites.mixins.collidable import Collidable
+from asteroids.sprites.mixins.drawable import Drawable
+from asteroids.sprites.mixins.updatable import Updatable
 from asteroids.sprites.player import Player
 from pygame.sprite import Group
 from pygame.surface import Surface
@@ -44,15 +46,15 @@ def pygame_loop(config: GameConfig) -> None:
     # Actual seconds per frame (first value isn't valid though)
     dt: float = 0.0
 
-    updatable: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
-    drawable: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
-    asteroids: Group[Any] = Group()  # pyright: ignore[reportExplicitAny]
+    updatable: Group[Updatable] = Group()
+    drawable: Group[Drawable] = Group()
+    asteroids: Group[Collidable] = Group()
 
-    Player.containers = (updatable, drawable)  # pyright: ignore[reportAttributeAccessIssue]
+    Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable,)
 
-    player = Player(  # pyright: ignore[reportUnusedVariable]
+    player = Player(
         x=config.screen.get_width() / 2, y=config.screen.get_height() / 2
     )
 
@@ -70,17 +72,17 @@ def pygame_loop(config: GameConfig) -> None:
 
         _ = config.screen.fill((0, 0, 0))
 
-        for updatable_object in updatable:  # pyright: ignore[reportAny]
-            updatable_object.update(dt)  # pyright: ignore[reportAny]
+        for updatable_object in updatable:
+            updatable_object.update(dt)
 
-        for asteroid in asteroids:  # pyright: ignore[reportAny]
-            if player.collides_with(asteroid):  # pyright: ignore[reportAny]
+        for asteroid in asteroids:
+            if player.collides_with(asteroid):
                 log_event("player_hit")
                 print("Game over!")
                 sys.exit(0)
 
-        for drawable_object in drawable:  # pyright: ignore[reportAny]
-            drawable_object.draw(config.screen)  # pyright: ignore[reportAny]
+        for drawable_object in drawable:
+            drawable_object.draw(config.screen)
 
         pygame.display.flip()
 
