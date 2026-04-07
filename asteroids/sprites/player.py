@@ -79,17 +79,19 @@ class Player(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeM
         self,
         shot_speed: float = PLAYER_SHOT_SPEED,
         shot_radius: float = SHOT_RADIUS,
+        shot_cooldown: float = PLAYER_SHOOT_COOLDOWN_SECONDS,
     ) -> None:
         """Shots the player's shot.
 
         Args:
             shot_speed: The speed of the shot, defaults to PLAYER_SHOT_SPEED from constants.py
             shot_radius: The radius or size of the shot, defaults to SHOT_RADIUS from constants.py
+            shot_cooldown: The time between shots in seconds, defaults to PLAYER_SHOOT_COOLDOWN_SECONDS from constants.py
         """
         if self.shot_cooldown_timer > 0.0:
             return
         # Reset timer
-        self.shot_cooldown_timer = PLAYER_SHOOT_COOLDOWN_SECONDS
+        self.shot_cooldown_timer = shot_cooldown
 
         shot = Shot(self.position.x, self.position.y, shot_radius)
         shot.velocity = Vector2(0, 1).rotate(self.rotation) * shot_speed
