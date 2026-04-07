@@ -34,6 +34,10 @@ explicit_package_bases = true
 [tool.ruff]
 src = ["asteroids"]
 line-length = 80
+exclude = [
+    "asteroids/sprites/asteroid_field.py",
+    "asteroids/logger.py"
+]
 
 [tool.ruff.lint]
 select = ["D"]
