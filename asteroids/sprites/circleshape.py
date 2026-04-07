@@ -14,7 +14,10 @@ class CircleShape(Collidable, BaseSprite):
 
     def __init__(self, x: float, y: float, radius: float) -> None:
         """Constructor for CircleShape."""
-        super().__init__(*self.containers)
+        if hasattr(self, "containers"):
+            super().__init__(*self.containers)
+        else:
+            super().__init__()
 
         self.position: Vector2 = Vector2(x, y)
         self.velocity: Vector2 = Vector2(0, 0)
