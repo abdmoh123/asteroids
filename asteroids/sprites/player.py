@@ -8,14 +8,18 @@ from asteroids.constants import (
     LEFT_KEYS,
     LINE_WIDTH,
     PLAYER_RADIUS,
+    PLAYER_SHOT_SPEED,
     PLAYER_SPEED,
     RIGHT_KEYS,
+    SHOOT_KEYS,
+    SHOT_RADIUS,
     TURN_SPEED,
     UP_KEYS,
 )
 from asteroids.sprites.circleshape import CircleShape, ColorValue
 from asteroids.sprites.mixins.drawable import Drawable
 from asteroids.sprites.mixins.updatable import Updatable
+from asteroids.sprites.shot import Shot
 from asteroids.utils import any_keys_in
 from pygame.math import Vector2
 from pygame.surface import Surface
@@ -69,6 +73,20 @@ class Player(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeM
         self.velocity = direction * dt * player_speed  # pyright: ignore[reportUnannotatedClassAttribute]
         self.position += self.velocity  # pyright: ignore[reportUnannotatedClassAttribute]
 
+    def shoot(
+        self,
+        shot_speed: float = PLAYER_SHOT_SPEED,
+        shot_radius: float = SHOT_RADIUS,
+    ) -> None:
+        """Shots the player's shot.
+
+        Args:
+            shot_speed: The speed of the shot, defaults to PLAYER_SHOT_SPEED from constants.py
+            shot_radius: The radius or size of the shot, defaults to SHOT_RADIUS from constants.py
+        """
+        shot = Shot(self.position.x, self.position.y, shot_radius)
+        shot.velocity = Vector2(0, 1).rotate(self.rotation) * shot_speed
+
     @override
     def draw(
         self,
@@ -107,3 +125,5 @@ class Player(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeM
             self.move(dt)
         if any_keys_in(DOWN_KEYS, keys):  # Backward
             self.move(-dt)
+        if any_keys_in(SHOOT_KEYS, keys):  # Shoot
+            self.shoot()

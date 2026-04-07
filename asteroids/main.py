@@ -8,12 +8,15 @@ from asteroids.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from asteroids.logger import log_event, log_state
 from asteroids.sprites.asteroid import Asteroid
 from asteroids.sprites.asteroid_field import AsteroidField
+from asteroids.sprites.base import BaseSprite
 from asteroids.sprites.mixins.collidable import Collidable
 from asteroids.sprites.mixins.drawable import Drawable
 from asteroids.sprites.mixins.updatable import Updatable
 from asteroids.sprites.player import Player
 from pygame.sprite import Group
 from pygame.surface import Surface
+
+from asteroids.sprites.shot import Shot
 
 
 @dataclass(frozen=True)
@@ -49,10 +52,12 @@ def pygame_loop(config: GameConfig) -> None:
     updatable: Group[Updatable] = Group()
     drawable: Group[Drawable] = Group()
     asteroids: Group[Collidable] = Group()
+    shots: Group[BaseSprite] = Group()
 
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable,)
+    Shot.containers = (shots, drawable, updatable)
 
     player = Player(
         x=config.screen.get_width() / 2, y=config.screen.get_height() / 2
