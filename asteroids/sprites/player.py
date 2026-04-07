@@ -8,6 +8,7 @@ from asteroids.constants import (
     LEFT_KEYS,
     LINE_WIDTH,
     PLAYER_RADIUS,
+    PLAYER_SHOOT_COOLDOWN_SECONDS,
     PLAYER_SHOT_SPEED,
     PLAYER_SPEED,
     RIGHT_KEYS,
@@ -43,6 +44,7 @@ class Player(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeM
         """Constructor for Player."""
         super().__init__(x=x, y=y, radius=radius)
         self.rotation: float = 0.0
+        self.shot_cooldown_timer: float = 0.0
 
     def triangle(self) -> Triangle:
         """Get the points of the player's triangle ship."""
@@ -84,6 +86,11 @@ class Player(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeM
             shot_speed: The speed of the shot, defaults to PLAYER_SHOT_SPEED from constants.py
             shot_radius: The radius or size of the shot, defaults to SHOT_RADIUS from constants.py
         """
+        if self.shot_cooldown_timer > 0.0:
+            return
+        # Reset timer
+        self.shot_cooldown_timer = PLAYER_SHOOT_COOLDOWN_SECONDS
+
         shot = Shot(self.position.x, self.position.y, shot_radius)
         shot.velocity = Vector2(0, 1).rotate(self.rotation) * shot_speed
 
@@ -127,3 +134,6 @@ class Player(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsafeM
             self.move(-dt)
         if any_keys_in(SHOOT_KEYS, keys):  # Shoot
             self.shoot()
+
+        # Cooldown timer (timer resets to 0.3 every time you shoot anyway)
+        self.shot_cooldown_timer -= dt
