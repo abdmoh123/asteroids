@@ -1,11 +1,12 @@
 """Miscellaneous utility functions."""
 
-from pygame.key import ScancodeWrapper
+from collections.abc import Sequence
 
 type Key = int
+type KeysList = Sequence[bool]
 
 
-def any_keys_in(selected_keys: set[Key], keys_list: ScancodeWrapper) -> bool:
+def any_keys_in(selected_keys: set[Key], keys_list: KeysList) -> bool:
     """Checks if any value in a list of selected keys are in the given keys list.
 
     Args:
