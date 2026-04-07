@@ -86,8 +86,11 @@ def pygame_loop(config: GameConfig) -> None:
 
             for shot in shots:
                 if asteroid.collides_with(shot):
+                    if not isinstance(asteroid, Asteroid):
+                        continue
+
                     log_event("asteroid_shot")
-                    asteroid.kill()
+                    asteroid.split()
                     shot.kill()
 
         for drawable_object in drawable:

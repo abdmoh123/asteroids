@@ -1,9 +1,11 @@
 """Asteroid sprite class."""
 
+import random
 from typing import override
 
 import pygame
-from asteroids.constants import LINE_WIDTH
+from asteroids.constants import ASTEROID_MIN_RADIUS, LINE_WIDTH
+from asteroids.logger import log_event
 from asteroids.sprites.circleshape import CircleShape, ColorValue
 from asteroids.sprites.mixins.drawable import Drawable
 from asteroids.sprites.mixins.updatable import Updatable
@@ -16,6 +18,22 @@ class Asteroid(CircleShape, Drawable, Updatable):  # pyright: ignore[reportUnsaf
     def __init__(self, x: float, y: float, radius: float) -> None:
         """Constructor for Asteroid."""
         super().__init__(x, y, radius)
+
+    def split(self, min_angle: float = 20, max_angle: float = 50, speed_up: float = 1.2) -> None:
+        """Splits the asteroid into smaller asteroids."""
+        self.kill()
+
+        if self.radius < ASTEROID_MIN_RADIUS:
+            return
+
+        log_event("asteroid_split")
+
+        angle = random.uniform(min_angle, max_angle)
+        new_radius = self.radius - ASTEROID_MIN_RADIUS
+        first_asteroid = Asteroid(self.position.x, self.position.y, new_radius)
+        second_asteroid = Asteroid(self.position.x, self.position.y, new_radius)
+        first_asteroid.velocity = self.velocity.rotate(angle) * speed_up
+        second_asteroid.velocity = self.velocity.rotate(-angle) * speed_up
 
     @override
     def draw(
